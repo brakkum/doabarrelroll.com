@@ -1,0 +1,117 @@
+
+html {
+    width: 100%;
+    height: 100vh;
+    background: #0a0a0a;
+    overflow-y: scroll;
+}
+
+body {
+
+    .background-wrapper {
+        background: url("/assets/dabr_background.png") no-repeat;
+        background-position-x: center;
+        background-size: cover;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: -1;
+        overflow-x: auto;
+
+        .page {
+            max-width: 1100px;
+            margin: auto;
+            padding: 20px 0 100px 0;
+
+            header {
+                margin: auto;
+
+                .dabr-logo {
+                    width: 95%;
+                    margin: auto;
+                    height: 40vh;
+                    max-height: 200px;
+                    background: url("/assets/dabr_logo.png") no-repeat;
+                    background-size: contain;
+                    background-position-x: center;
+                }
+            }
+
+            section {
+                margin: auto;
+
+                &.social-links-container {
+                    width: 95%;
+                    margin: 20px auto;
+
+                    .social-links {
+                        display: flex;
+                        flex-wrap: wrap;
+                        justify-content: space-around;
+
+                        .social-media-container {
+
+                            a {
+                                color: white;
+                                transition: color .2s;
+
+                                i {
+                                    width: 125px;
+                                    height: 100px;
+                                    display: inline-block;
+                                    text-align: center;
+                                }
+
+                                &:hover {
+                                    color: #bfbbff;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                &.contact {
+                    display: flex;
+                    flex-wrap: wrap;
+                    justify-content: space-between;
+                    align-items: center;
+
+                    .contact-section {
+                        flex-grow: 1;
+                        margin: 15px;
+                        min-width: 375px;
+
+                        .picture {
+                            background: url("/assets/dabr.jpg") no-repeat center;
+                            background-size: 100%;
+                            background-position-y: top;
+                            min-height: 350px;
+                            width: 100%;
+                        }
+                    }
+                }
+            }
+
+            hr {
+                max-width: 90%;
+                margin: 20px auto;
+            }
+
+            .text {
+                color: #f6ec13;
+                font-size: 30px;
+                margin-bottom: 15px;
+                font-family: "Cabin", sans-serif;
+                font-style: italic;
+
+                &.small {
+                    font-size: 18px;
+                }
+
+                &.centered {
+                    text-align: center;
+                }
+            }
+        }
+    }
+}
