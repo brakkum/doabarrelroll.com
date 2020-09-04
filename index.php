@@ -10,7 +10,7 @@
             $response = "Please fill out all the fields.";
         } else {
 
-            include_once("email.php");
+            include_once("email_address.php");
             // send email
             if (!isset($email_address)) {
                 die("email_address is not set");
