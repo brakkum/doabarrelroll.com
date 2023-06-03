@@ -1,6 +1,7 @@
 
 .idea/
 email_address.php
+api_key.php
 log/
 *.zip
-
+vendor/

@@ -1,36 +1,62 @@
 <?php
 
-    if (isset($_POST["form-submit"])) {
-        $name = $_POST["name"];
-        $email = $_POST["email"];
-        $message = $_POST["message"];
+require 'vendor/autoload.php';
+require 'email.php';
+require 'api_key.php';
 
-        if (!$name || !$email || !$message) {
+use SendGrid\Mail\Mail;
+use SendGrid\Mail\Personalization;
+
+function getPostIfSet($param)
+{
+    return isset($_POST[$param]) ? $_POST[$param] : "";
+}
+
+if (isset($_POST["form-submit"])) {
+        $name        = $_POST["name"];
+        $input_email = $_POST["email"];
+        $message     = $_POST["message"];
+
+        if (!$name || !$input_email || !$message) {
             $success = false;
             $response = "Please fill out all the fields.";
         } else {
 
             include_once("email_address.php");
             // send email
-            if (!isset($email_address)) {
-                die("email_address is not set");
+            if (!isset($email_address) || !isset($DABR_SENDGRID_API_KEY)) {
+                die("email_address or api_key is not set");
             }
-            $to = $email_address;
-            $subject = "New DABR Message";
-            $headers = "MIME-Version: 1.0" . "\r\n";
-            $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-            $headers .= "From: <$email>" . "\r\n";
-            include_once("email.php");
-            $body = get_email($name, $email, $message);
-            mail($to, $subject, $body, $headers);
-            $success = true;
-            $response = "Thanks for your message!";
+
+            // sendgrid
+            $email = new Mail();
+            $email->setFrom("dabr@brakke.dev");
+            $email->setSubject("New DABR Message");
+            $email->addTo($email_address);
+            $email->addContent("text/plain", get_email($name, $input_email, $message));
+            $email->addContent(
+                "text/html", get_email($name, $input_email, $message)
+            );
+
+            $sendgrid = new SendGrid($DABR_SENDGRID_API_KEY);
+
+            try {
+                $response = $sendgrid->send($email);
+                if ($response->statusCode() >= 300) {
+                    $success = false;
+                    $response = "Sorry, something went wrong.";
+                } else {
+                    $success = true;
+                    $response = "Thanks for your message!";
+                }
+            } catch (Exception $e) {
+                echo 'Caught exception: '. $e->getMessage() ."\n";
+            }
         }
     } else {
         $success = false;
         $response = "";
     }
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -111,7 +137,7 @@
                                         <div class="control">
                                             <label class="label text small">
                                                 Name
-                                                <input name="name" type="text" class="input" placeholder="Name">
+                                                <input name="name" type="text" class="input" placeholder="Name" value="<?php echo getPostIfSet("name") ?>">
                                             </label>
                                         </div>
                                     </div>
@@ -119,7 +145,7 @@
                                         <div class="control">
                                             <label class="label text small">
                                                 Email
-                                                <input name="email" type="text" class="input" placeholder="Email">
+                                                <input name="email" type="text" class="input" placeholder="Email" value="<?php echo getPostIfSet("email") ?>">
                                             </label>
                                         </div>
                                     </div>
@@ -128,7 +154,7 @@
                                             Message
                                         </label>
                                         <div class="control">
-                                            <textarea name="message" class="textarea"></textarea>
+                                            <textarea name="message" class="textarea"><?php echo getPostIfSet("message") ?></textarea>
                                         </div>
                                     </div>
                                     <div class="field">
