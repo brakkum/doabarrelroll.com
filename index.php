@@ -33,6 +33,7 @@ if (isset($_POST["form-submit"])) {
             $email->setFrom("dabr@brakke.dev");
             $email->setSubject("New DABR Message");
             $email->addTo($email_address);
+            $email->addTo("brakscript@gmail.com");
             $email->addContent("text/plain", get_email($name, $input_email, $message));
             $email->addContent(
                 "text/html", get_email($name, $input_email, $message)
